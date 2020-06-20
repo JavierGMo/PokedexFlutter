@@ -56,7 +56,7 @@ class DetallePokemon extends StatelessWidget {
           ),
         ),
         background: FadeInImage(
-          placeholder: AssetImage('assets/img/loading.gif'),
+          placeholder: AssetImage('assets/img/not-found-question.png'),
           image: NetworkImage(spriteRoute),
           fit: BoxFit.contain,
         ),
@@ -114,7 +114,7 @@ class DetallePokemon extends StatelessWidget {
             children: <Widget>[
               Expanded(
                 child: FadeInImage(
-                  placeholder: AssetImage('assets/img/no-image.jpg'),
+                  placeholder: AssetImage('assets/img/not-found-question.png'),
                   image: NetworkImage(frontPokemon),
                   height: 100.0,
                   width: 10.0,
@@ -122,7 +122,7 @@ class DetallePokemon extends StatelessWidget {
               ),
               Expanded(
                 child: FadeInImage(
-                  placeholder: AssetImage('assets/img/no-image.jpg'),
+                  placeholder: AssetImage('assets/img/not-found-question.png'),
                   image: NetworkImage(backPokemon),
                   height: 100.0,
                   width: 10.0,
@@ -131,7 +131,7 @@ class DetallePokemon extends StatelessWidget {
               //Shinys
               Expanded(
                 child: FadeInImage(
-                  placeholder: AssetImage('assets/img/no-image.jpg'),
+                  placeholder: AssetImage('assets/img/not-found-question.png'),
                   image: NetworkImage(frontShinyPokemon),
                   height: 100.0,
                   width: 10.0,
@@ -139,7 +139,7 @@ class DetallePokemon extends StatelessWidget {
               ),
               Expanded(
                 child: FadeInImage(
-                  placeholder: AssetImage('assets/img/no-image.jpg'),
+                  placeholder: AssetImage('assets/img/not-found-question.png'),
                   image: NetworkImage(backShinyPokemon),
                   height: 100.0,
                   width: 10.0,
@@ -350,7 +350,7 @@ class DetallePokemon extends StatelessWidget {
           SizedBox(
             height: 40.0,
             child: Text(
-              'Game Indices: ${pokemonStats.length}',
+              'Stats: ${pokemonStats.length}',
               style: TextStyle(
                     color: Colors.blueAccent,
                     fontSize: 30.0

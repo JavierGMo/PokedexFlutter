@@ -10,14 +10,13 @@ class ProviderPokemon{
   
 
   Future<Pokemon> irPorPokemon(String nombrePokemon) async {
-    print('**************$nombrePokemon*************');
     final respuesta = await http.get('https://pokeapi.co/api/v2/pokemon/$nombrePokemon');
+
+    if(respuesta.statusCode == 404 || respuesta.statusCode == 500) return null;
 
     final decodedJson = json.decode(respuesta.body);
 
     final pokemon = new Pokemon.fromJsonMap(decodedJson);
-
-    print(decodedJson['sprites']);
     
 
 

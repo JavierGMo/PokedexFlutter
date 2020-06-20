@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
           SizedBox(height: 30.0,),
           _inputText(),
           SizedBox(height: 30.0,),
-          _botonBuscar(),
+          _botonBuscar(context),
           SizedBox(height: 30.0,),
         ],
       ),        
@@ -44,18 +44,16 @@ class _HomePageState extends State<HomePage> {
           borderRadius: BorderRadius.circular(20.0)
         ),
         hintText: 'Nombre del pokemon',
-        labelText: 'Pokemon',
-        icon: Icon(Icons.account_circle)
+        labelText: 'Nombre del pokemon',
       ),
       onSubmitted: (valor){
         setState(() {
           this.nombrePokemonInput = valor;
-          print(nombrePokemon);
         });
       },
     );
   }
-  Widget _botonBuscar(){
+  Widget _botonBuscar(BuildContext context){
     return RaisedButton(
       color: Colors.redAccent,
       padding: EdgeInsets.only(top: 15.0, right: 25.0, bottom: 15.0, left: 25.0 ),
@@ -74,14 +72,47 @@ class _HomePageState extends State<HomePage> {
           this.dataPokemon = await providerPokemon.irPorPokemon(nombrePokemon);
           if(this.dataPokemon != null){
             Navigator.pushNamed(context, 'detalle', arguments: this.dataPokemon);
+          }else if(this.dataPokemon == null){
+            _mostrarAlerta(context, '¡Vaya! A Ocurrido un error.', 'Escriba bien el nombre de pokemon o cantacte con el admin.');
           }
            
+        }else{
+          _mostrarAlerta(context, '¡Vaya! Texto vacio.', 'Escriba el nombre de un pokemon.');
         }
-        
         
       },
     );
   }
   
+  void _mostrarAlerta(BuildContext context, String titulo, String mensaje){
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context){
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+          title: Text(titulo),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text(mensaje),
+              FlutterLogo(size: 150.0,),
+            ],
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Ok',
+                style: TextStyle(
+                  fontSize: 25.0,
+                ),
+              ),
+              onPressed: ()=>Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      }
+    );
+  }
   
 }
