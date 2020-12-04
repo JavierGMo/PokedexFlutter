@@ -13,22 +13,24 @@ class _HomePageState extends State<HomePage> {
   String nombrePokemonInput = '';
   ProviderPokemon providerPokemon = new ProviderPokemon();
   Pokemon dataPokemon;
-
+  Color colorRedCool = Color.fromRGBO(243, 33, 93, 1.0);
 
   @override
   Widget build(BuildContext context) {
+    Size mediaSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text('Pokedex!!!'),
-        backgroundColor: Colors.redAccent,
+        backgroundColor: colorRedCool,
       ),
+      backgroundColor: Color.fromRGBO(49, 49, 49, 1.0),
       body: Container(
       child: Column(
         children: <Widget>[
           SizedBox(height: 30.0,),
-          _inputText(),
+          Center(child: _inputText(mediaSize),),
           SizedBox(height: 30.0,),
-          _botonBuscar(context),
+          _botonBuscar(context, mediaSize),
           SizedBox(height: 30.0,),
         ],
       ),        
@@ -36,54 +38,76 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _inputText(){
-    return TextField(
-      textCapitalization: TextCapitalization.sentences,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20.0)
-        ),
-        hintText: 'Nombre del pokemon',
-        labelText: 'Nombre del pokemon',
-      ),
-      onSubmitted: (valor){
-        setState(() {
-          this.nombrePokemonInput = valor;
-        });
-      },
-    );
-  }
-  Widget _botonBuscar(BuildContext context){
-    return RaisedButton(
-      color: Colors.redAccent,
-      padding: EdgeInsets.only(top: 15.0, right: 25.0, bottom: 15.0, left: 25.0 ),
-      child: Text(
-        'Buscar',
+  Widget _inputText(Size media){
+    return Container(
+      width: media.width - 50.0,
+      child: TextField(
+        textCapitalization: TextCapitalization.sentences,
         style: TextStyle(
-          fontSize: 20.0,
-          fontFamily: 'Raleway',
+          color: Colors.white
         ),
+        decoration: InputDecoration(
+          hintStyle: TextStyle(
+            color: colorRedCool,
+          ),
+          labelStyle: TextStyle(
+            color: colorRedCool,
+            decorationColor: colorRedCool,
+          ),
+          fillColor: colorRedCool,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(width: 1.0,color: colorRedCool),
+          ),
+          hintText: 'Pokemon name',
+          labelText: 'Pokemon name',
+        ),
+        onSubmitted: (valor){
+          setState(() {
+            this.nombrePokemonInput = valor;
+          });
+        },
       ),
-      onPressed: ()async {
-        if(nombrePokemonInput.trim() != ''){
-          
-          this.nombrePokemon = this.nombrePokemonInput..trim()..toLowerCase();
-          this.nombrePokemonInput = '';
-          this.dataPokemon = await providerPokemon.irPorPokemon(nombrePokemon);
-          if(this.dataPokemon != null){
-            Navigator.pushNamed(context, 'detalle', arguments: this.dataPokemon);
-          }else if(this.dataPokemon == null){
-            _mostrarAlerta(context, '¡Vaya! A Ocurrido un error.', 'Escriba bien el nombre de pokemon o cantacte con el admin.');
-          }
-           
-        }else{
-          _mostrarAlerta(context, '¡Vaya! Texto vacio.', 'Escriba el nombre de un pokemon.');
-        }
-        
-      },
     );
   }
   
+  Widget _botonBuscar(BuildContext context, Size media){
+    return Container(
+      width: media.width-50.0,
+      child: RaisedButton(
+        color: Color.fromRGBO(243, 163, 33, 1.0),
+        padding: EdgeInsets.only(top: 15.0, right: 25.0, bottom: 15.0, left: 25.0 ),
+        child: Text(
+          'Search pokemon',
+          style: TextStyle(
+            fontSize: 20.0,
+            fontFamily: 'Raleway',
+            color: Colors.white
+          ),
+        ),
+        onPressed: ()async {
+          if(nombrePokemonInput.trim() != ''){
+            
+            this.nombrePokemon = this.nombrePokemonInput.trim().toLowerCase();
+            this.nombrePokemonInput = '';
+            this.dataPokemon = await providerPokemon.irPorPokemon(nombrePokemon);
+            if(this.dataPokemon != null){
+              Navigator.pushNamed(context, 'detalle', arguments: this.dataPokemon);
+            }else if(this.dataPokemon == null){
+              _mostrarAlerta(context, '¡Wow! An error has occurred..', 'Write the name of the pokemon well or contact the administrator.');
+            }
+             
+          }else{
+            _mostrarAlerta(context, '¡Wow! Empty text.', 'Write the name of a pokemon.');
+          }
+          
+        },
+      ),
+    );
+  }
+
   void _mostrarAlerta(BuildContext context, String titulo, String mensaje){
     showDialog(
       context: context,

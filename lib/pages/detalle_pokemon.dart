@@ -9,6 +9,7 @@ class DetallePokemon extends StatelessWidget {
   Widget build(BuildContext context) {
     final Pokemon dataPokemon = ModalRoute.of(context).settings.arguments;
     return Scaffold(
+      backgroundColor: Color.fromRGBO(49, 49, 49, 1.0),
      body: CustomScrollView(
        slivers: <Widget>[
          _crearAppBar(dataPokemon.name, dataPokemon.sprites['front_default']),
@@ -17,7 +18,9 @@ class DetallePokemon extends StatelessWidget {
               SizedBox(height: 4.0,),
               _sprites(dataPokemon.sprites),
               SizedBox(height: 10.0,),
-              _types(dataPokemon.types),
+              _information(dataPokemon.types, dataPokemon.height, dataPokemon.weight),
+              SizedBox(height: 10.0,),
+              //_types(dataPokemon.types),
               SizedBox(height: 10.0,),
               //['ability']['name']
               _scrollCardRight('Abilities', 'ability',  'name', dataPokemon.abilities),
@@ -42,7 +45,7 @@ class DetallePokemon extends StatelessWidget {
   Widget _crearAppBar(String nombrePokemon, String spriteRoute){
     return SliverAppBar(
       elevation: 2.0,
-      backgroundColor: Colors.redAccent,
+      backgroundColor: Color.fromRGBO(243, 33, 93, 1.0),
       expandedHeight: 250.0,
       floating: false,
       pinned: true,
@@ -56,7 +59,7 @@ class DetallePokemon extends StatelessWidget {
           ),
         ),
         background: FadeInImage(
-          placeholder: AssetImage('assets/img/not-found-question.png'),
+          placeholder: AssetImage('assets/img/loading.gif'),
           image: NetworkImage(spriteRoute),
           fit: BoxFit.contain,
         ),
@@ -149,39 +152,82 @@ class DetallePokemon extends StatelessWidget {
           );
   }
 
-  Widget _types(List typesPokemon){
-    return Container(
-      child: Column(
-        children: <Widget>[
-          Text(
-            'Types: ${typesPokemon.length}',
-            style: TextStyle(
-                  color: Colors.blueAccent,
-                  fontSize: 30.0
-            ),
+  Widget _information(List typesPokemon, int heightParam, int weightParam){
+    return Center(
+        child: Container(
+          width: 390.0,
+          height: 350.0,
+          padding: EdgeInsets.only(top: 50.0, right: 10.0, bottom: 50.0, left: 10.0),
+          decoration: BoxDecoration(
+            color: Colors.amber,
+            borderRadius: BorderRadius.circular(10.0)
           ),
-          SizedBox(height: 15.0,),
-          Row(
-
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: typesPokemon.map((typePokemon){
-              return Container(
-                margin: EdgeInsets.only(right: 25.0),
-                child: Text(
-                  typePokemon['type']['name'].toString().toUpperCase(),
-                  style: TextStyle(
+          child: Column(
+            children: <Widget>[
+              Text(
+                'Information',
+                style: TextStyle(
                     color: Colors.blueAccent,
-                    fontSize: 20.0
-                  ),
-                  
+                    fontSize: 35.0
                 ),
-              );
-            }).toList(),
+              ),
+              SizedBox(height: 20.0,),
+              Text(
+                'Height: $heightParam ft',
+                style: TextStyle(
+                    color: Colors.blueAccent,
+                    fontSize: 25.0
+                ),
+              ),
+              SizedBox(height: 20.0,),
+              Text(
+                'Weight: $weightParam oz',
+                style: TextStyle(
+                    color: Colors.blueAccent,
+                    fontSize: 25.0
+                ),
+              ),
+              SizedBox(height: 30.0,),
+              _types(typesPokemon),
+            ],
           ),
-        ],
-      ),
+        ),
     );
   }
+
+  Widget _types(List typesPokemon){
+      return Container(
+        child: Column(
+          children: <Widget>[
+            Text(
+              'Types: ${typesPokemon.length}',
+              style: TextStyle(
+                    color: Colors.blueAccent,
+                    fontSize: 35.0
+              ),
+            ),
+            SizedBox(height: 15.0,),
+            Row(
+
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: typesPokemon.map((typePokemon){
+                return Container(
+                  margin: EdgeInsets.only(right: 25.0),
+                  child: Text(
+                    typePokemon['type']['name'].toString().toUpperCase(),
+                    style: TextStyle(
+                      color: Colors.blueAccent,
+                      fontSize: 20.0
+                    ),
+                    
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
+        ),
+      );
+    }
 
   Widget _abilities(List<dynamic> pokemonAbilities){
     return Container(
@@ -212,9 +258,9 @@ class DetallePokemon extends StatelessWidget {
   }
 
   Widget _scrollCardRight(String property, String keyOnePokemonProperty,String keyTwoPokemonProperty,List<dynamic> pokemonProperty){
-    return SizedBox(
+    return Container(
       height: 120.0,
-      width: 10.0,
+      width: 10.0,      
       child: Column(
         children: <Widget>[
           SizedBox(
@@ -228,11 +274,14 @@ class DetallePokemon extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: PageView.builder(
-              itemCount: pokemonProperty.length,
-              itemBuilder: (BuildContext context, int index){
-                return _boxStyleProperty(pokemonProperty[index][keyOnePokemonProperty][keyTwoPokemonProperty]);
-              },
+            child: Padding(
+              padding: EdgeInsets.only(right: 20.0, left: 20.0),
+              child: PageView.builder(
+                itemCount: pokemonProperty.length,
+                itemBuilder: (BuildContext context, int index){
+                  return _boxStyleProperty(pokemonProperty[index][keyOnePokemonProperty][keyTwoPokemonProperty]);
+                },
+              ),
             ),
           ),
         ],
@@ -246,13 +295,10 @@ class DetallePokemon extends StatelessWidget {
       width: 90.0,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30.0),
-        color: Colors.white,
+        color: Color.fromRGBO(243, 33, 93, 1.0),
         boxShadow: <BoxShadow>[
           BoxShadow(
             color: Colors.black26,
-            blurRadius: 10.0,
-            spreadRadius: 2.0,
-            offset: Offset(1.0, 5.0)
           )
         ]
       ),
@@ -286,12 +332,15 @@ class DetallePokemon extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: PageView.builder(
-              itemCount: gamesIndices.length,
-              itemBuilder: (BuildContext context, int index){
-                return _styleCardGamesIndices(gamesIndices[index]['version']['name'], gamesIndices[index]['game_index']);
-              },
-            ),
+            child: Container(
+              padding: EdgeInsets.only(right: 20.0, left: 20.0),
+                child: PageView.builder(
+                itemCount: gamesIndices.length,
+                itemBuilder: (BuildContext context, int index){
+                  return _styleCardGamesIndices(gamesIndices[index]['version']['name'], gamesIndices[index]['game_index']);
+                },
+              ),
+            )
           ),
         ],
       ),
@@ -304,13 +353,10 @@ class DetallePokemon extends StatelessWidget {
       width: 90.0,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30.0),
-        color: Colors.white,
+        color: Color.fromRGBO(243, 58, 33, 1.0),
         boxShadow: <BoxShadow>[
           BoxShadow(
             color: Colors.black26,
-            blurRadius: 10.0,
-            spreadRadius: 2.0,
-            offset: Offset(1.0, 5.0)
           )
         ]
       ),
@@ -344,7 +390,6 @@ class DetallePokemon extends StatelessWidget {
   Widget _cardStats(List<dynamic> pokemonStats){
     return SizedBox(
       height: 210.0,
-      width: 10.0,
       child: Column(
         children: <Widget>[
           SizedBox(
@@ -358,12 +403,15 @@ class DetallePokemon extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: PageView.builder(
-              itemCount: pokemonStats.length,
-              itemBuilder: (BuildContext context, int index){
-                return _styleCardStats(pokemonStats[index]['base_stat'], pokemonStats[index]['effort'], pokemonStats[index]['stat']['name']);
-              },
-            ),
+            child: Container(
+              padding: EdgeInsets.only(right: 20.0, left: 20.0),
+              child: PageView.builder(
+                itemCount: pokemonStats.length,
+                itemBuilder: (BuildContext context, int index){
+                  return _styleCardStats(pokemonStats[index]['base_stat'], pokemonStats[index]['effort'], pokemonStats[index]['stat']['name']);
+                },
+              ),
+            )
           ),
         ],
       ),
@@ -373,20 +421,11 @@ class DetallePokemon extends StatelessWidget {
   Widget _styleCardStats(int baseStat, int effort, String name){
     return Container(
       height: 150.0,
-      width: 90.0,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30.0),
-        color: Colors.white,
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 10.0,
-            spreadRadius: 2.0,
-            offset: Offset(1.0, 5.0)
-          )
-        ]
+        color: Color.fromRGBO(243, 163, 33, 1.0),
       ),
-      padding: EdgeInsets.only(top: 25.0, right: 20.0, bottom: 25.0, left: 20.0),
+      padding: EdgeInsets.only(top: 35.0, right: 20.0, bottom: 21.0, left: 20.0),
       child: Column(
         children: <Widget>[
           Text(
@@ -395,7 +434,7 @@ class DetallePokemon extends StatelessWidget {
             textDirection: TextDirection.rtl,
             style: TextStyle(
               color: Colors.blueAccent,
-              fontSize: 25.0,
+              fontSize: 22.0,
             ),
           ),
           SizedBox(height: 10.0,),
@@ -405,7 +444,7 @@ class DetallePokemon extends StatelessWidget {
             textDirection: TextDirection.rtl,
             style: TextStyle(
               color: Colors.blueAccent,
-              fontSize: 25.0,
+              fontSize: 22.0,
             ),
           ),
           SizedBox(height: 10.0,),
@@ -415,7 +454,7 @@ class DetallePokemon extends StatelessWidget {
             textDirection: TextDirection.rtl,
             style: TextStyle(
               color: Colors.blueAccent,
-              fontSize: 25.0,
+              fontSize: 22.0,
             ),
           ),
         ],
